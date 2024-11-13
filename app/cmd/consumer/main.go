@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/segmentio/kafka-go"
 	"log"
-	"time"
 )
 
 var brokers = []string{"127.0.0.1:9095", "127.0.0.1:9096", "127.0.0.1:9097"}
@@ -31,5 +30,4 @@ func main() {
 	if err := r.Close(); err != nil {
 		log.Fatal("failed to close reader:", err)
 	}
-	time.Sleep(500)
 }
