@@ -56,14 +56,14 @@ func (app *App) Run(ctx context.Context) {
 		return app.StartHTTPServer(ctx)
 	})
 
-	// Close Kafka writer when done
+	// Close Kafka writer when context done
 	g.Go(func() error {
-		defer func() {
-			log.Println("Kafka close")
+		select {
+		case <-ctx.Done():
 			if err := app.kafkaWriter.Close(); err != nil {
-				log.Println("Error closing kafkaWriter:", err)
+				log.Println("Error closing Kafka writer:", err)
 			}
-		}()
+		}
 		return nil
 	})
 
