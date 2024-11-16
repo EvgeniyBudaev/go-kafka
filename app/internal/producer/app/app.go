@@ -5,8 +5,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/segmentio/kafka-go"
+	"golang.org/x/sync/errgroup"
 	"log"
-	"sync"
 )
 
 // App - application structure
@@ -49,13 +49,27 @@ func New() *App {
 
 // Run launches the application
 func (app *App) Run(ctx context.Context) {
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		if err := app.StartHTTPServer(ctx); err != nil {
-			log.Println(err)
-		}
-		wg.Done()
-	}()
-	wg.Wait()
+	g, ctx := errgroup.WithContext(ctx)
+
+	// Start HTTP server
+	g.Go(func() error {
+		return app.StartHTTPServer(ctx)
+	})
+
+	// Close Kafka writer when done
+	g.Go(func() error {
+		defer func() {
+			log.Println("Kafka close")
+			if err := app.kafkaWriter.Close(); err != nil {
+				log.Println("Error closing kafkaWriter:", err)
+			}
+		}()
+		return nil
+	})
+
+	if err := g.Wait(); err != nil {
+		log.Printf("Application error: %v", err)
+	} else {
+		log.Println("Microservice producer finished successfully")
+	}
 }

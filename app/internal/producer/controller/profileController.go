@@ -43,10 +43,6 @@ func (pc *ProfileController) AddLike() fiber.Handler {
 			fmt.Println("WriteMessages err: ", err)
 			return v1.ResponseError(ctf, err, http.StatusInternalServerError)
 		}
-		if err := pc.kafkaWriter.Close(); err != nil {
-			fmt.Println("s.kafkaWriter.Close err: ", err)
-			return v1.ResponseError(ctf, err, http.StatusInternalServerError)
-		}
 		return v1.ResponseCreated(ctf, "OK")
 	}
 }
