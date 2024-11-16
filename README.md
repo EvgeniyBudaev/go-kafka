@@ -22,3 +22,9 @@ https://github.com/segmentio/kafka-go
 ```
 go get github.com/segmentio/kafka-go
 ```
+
+Fiber
+https://github.com/gofiber/fiber
+```
+go get -u github.com/gofiber/fiber/v2
+```

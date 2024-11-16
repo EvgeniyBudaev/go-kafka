@@ -1,6 +1,13 @@
 version: "3.8"
 
 services:
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     ports:
@@ -12,13 +19,6 @@ services:
       - AUTH_TYPE=LOGIN_FORM
       - SPRING_SECURITY_USER_NAME=admin
       - SPRING_SECURITY_USER_PASSWORD=pass
-
-  zookeeper:
-    image: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka-1:
     image: wurstmeister/kafka
