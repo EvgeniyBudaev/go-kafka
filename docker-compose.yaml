@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   zookeeper:
+    container_name: zookeeper
     image: zookeeper
     ports:
       - "2181:2181"
@@ -9,6 +10,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka-ui:
+    container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
       - "8080:8080"
@@ -21,6 +23,7 @@ services:
       - SPRING_SECURITY_USER_PASSWORD=pass
 
   kafka-1:
+    container_name: kafka-1
     image: wurstmeister/kafka
     ports:
       - "9095:9094"
@@ -38,6 +41,7 @@ services:
       - ./kafka_data/500:/kafka
 
   kafka-2:
+    container_name: kafka-2
     image: wurstmeister/kafka
     ports:
       - "9096:9094"
@@ -55,6 +59,7 @@ services:
       - ./kafka_data/501:/kafka
 
   kafka-3:
+    container_name: kafka-3
     image: wurstmeister/kafka
     ports:
       - "9097:9094"
