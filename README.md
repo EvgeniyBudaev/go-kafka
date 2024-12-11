@@ -28,3 +28,8 @@ https://github.com/gofiber/fiber
 ```
 go get -u github.com/gofiber/fiber/v2
 ```
+
+Создание docker network
+```
+docker network create web-network
+```
