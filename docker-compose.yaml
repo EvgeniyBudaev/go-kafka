@@ -11,69 +11,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
-  kafka-1:
-    container_name: kafka-1
-    image: wurstmeister/kafka
-    ports:
-      - "9095:9094"
-    networks:
-      - web-network
-    restart: always
-    environment:
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_LISTENERS=INTERNAL://kafka-1:9092,OUTSIDE://kafka-1:9094
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-1:9092,OUTSIDE://127.0.0.1:9095
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
-      - KAFKA_LOG_DIRS=/kafka/logs
-      - KAFKA_BROKER_ID=500
-      - KAFKA_offsets_topic_replication_factor=3
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./kafka_data/500:/kafka
-
-  kafka-2:
-    container_name: kafka-2
-    image: wurstmeister/kafka
-    ports:
-      - "9096:9094"
-    networks:
-      - web-network
-    restart: always
-    environment:
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_LISTENERS=INTERNAL://kafka-2:9092,OUTSIDE://kafka-2:9094
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092,OUTSIDE://127.0.0.1:9096
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
-      - KAFKA_LOG_DIRS=/kafka/logs
-      - KAFKA_BROKER_ID=501
-      - KAFKA_offsets_topic_replication_factor=3
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./kafka_data/501:/kafka
-
-  kafka-3:
-    container_name: kafka-3
-    image: wurstmeister/kafka
-    ports:
-      - "9097:9094"
-    networks:
-      - web-network
-    restart: always
-    environment:
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_LISTENERS=INTERNAL://kafka-3:9092,OUTSIDE://kafka-3:9094
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-3:9092,OUTSIDE://127.0.0.1:9097
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
-      - KAFKA_LOG_DIRS=/kafka/logs
-      - KAFKA_BROKER_ID=502
-      - KAFKA_offsets_topic_replication_factor=3
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./kafka_data/502:/kafka
-
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
@@ -88,12 +25,81 @@ services:
       - AUTH_TYPE=LOGIN_FORM
       - SPRING_SECURITY_USER_NAME=admin
       - SPRING_SECURITY_USER_PASSWORD=pass
-    links:
-      - kafka-1
-      - kafka-2
-      - kafka-3
-      - zookeeper
+
+  kafka-1:
+    container_name: kafka-1
+    image: wurstmeister/kafka
+    ports:
+#      - "172.18.0.1:10095:9094" # docker inspect network web-network
+      - "127.0.0.1:10095:9094" # for localhost
+    networks:
+      - web-network
+    restart: always
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_LISTENERS=INTERNAL://kafka-1:9092,OUTSIDE://kafka-1:9094
+#      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-1:9092,OUTSIDE://172.18.0.1:10095
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-1:9092,OUTSIDE://127.0.0.1:10095 # for localhost
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      - KAFKA_LOG_DIRS=/kafka/logs
+      - KAFKA_BROKER_ID=500
+      - KAFKA_offsets_topic_replication_factor=3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka_data_1:/kafka
+
+  kafka-2:
+    container_name: kafka-2
+    image: wurstmeister/kafka
+    ports:
+#      - "172.18.0.1:10096:9094"
+      - "127.0.0.1:10096:9094" # for localhost
+    networks:
+      - web-network
+    restart: always
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_LISTENERS=INTERNAL://kafka-2:9092,OUTSIDE://kafka-2:9094
+#      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092,OUTSIDE://172.18.0.1:10096
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092,OUTSIDE://127.0.0.1:10096  # for localhost
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      - KAFKA_LOG_DIRS=/kafka/logs
+      - KAFKA_BROKER_ID=501
+      - KAFKA_offsets_topic_replication_factor=3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka_data_2:/kafka
+
+  kafka-3:
+    container_name: kafka-3
+    image: wurstmeister/kafka
+    ports:
+#      - "172.18.0.1:10097:9094"
+      - "127.0.0.1:10097:9094" # for localhost
+    networks:
+      - web-network
+    restart: always
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_LISTENERS=INTERNAL://kafka-3:9092,OUTSIDE://kafka-3:9094
+#      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-3:9092,OUTSIDE://172.18.0.1:10097
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-3:9092,OUTSIDE://127.0.0.1:10097 # for localhost
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      - KAFKA_LOG_DIRS=/kafka/logs
+      - KAFKA_BROKER_ID=502
+      - KAFKA_offsets_topic_replication_factor=3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka_data_3:/kafka
 
 networks:
   web-network:
     external: true
+
+volumes:
+  kafka_data_1:
+  kafka_data_2:
+  kafka_data_3:

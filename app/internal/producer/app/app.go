@@ -19,7 +19,7 @@ type App struct {
 func New() *App {
 	// Kafka
 	w := &kafka.Writer{
-		Addr:         kafka.TCP("127.0.0.1:9095", "27.0.0.1:9096", "127.0.0.1:9097"),
+		Addr:         kafka.TCP("127.0.0.1:10095", "127.0.0.1:10096", "127.0.0.1:10097"),
 		Topic:        "test_topic",
 		Balancer:     &kafka.LeastBytes{},
 		BatchSize:    1048576,

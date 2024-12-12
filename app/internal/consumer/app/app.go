@@ -12,7 +12,7 @@ import (
 	"log"
 )
 
-var brokers = []string{"127.0.0.1:9095", "127.0.0.1:9096", "127.0.0.1:9097"}
+var brokers = []string{"127.0.0.1:10095", "127.0.0.1:10096", "127.0.0.1:10097"}
 
 // App - application structure
 type App struct {
